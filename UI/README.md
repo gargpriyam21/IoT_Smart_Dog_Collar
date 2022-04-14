@@ -11,3 +11,8 @@ Setup:
 - Confirm mosquitto listening on port 1883 (normal mqtt) and port 9001 (websockets) using "sudo netstat -tlnpu | grep mosq"
 - From project/UI/ folder, start webserver using "node server.js"
 - Access site using http://localhost:8080
+
+To use:
+- Ensure ip is set correctly for MQTT (currently set for 'localhost')
+- To topic 'pathPoints', send a string in JSON format containing x and y elements. Ex: "{"x": 10, "y": 20}"
+  - This will be parsed by webpage and have a point plotted along with a connecting segment to the previous point if it     exists
