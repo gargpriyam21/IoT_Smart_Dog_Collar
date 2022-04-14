@@ -9,6 +9,8 @@
     </style>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 	<script>
+		var xVar = 1;
+		
 		// called when the client connects
 		function onConnect() {
 		  // Once a connection has been made, make a subscription and send a message.
@@ -42,8 +44,25 @@
 		// connect the client
 		client.connect({onSuccess:onConnect});
 		}
-		
-        const canvas = document.getElementById('myCanvas');
+    </script>
+  </head>
+  <body>
+    <h1>
+      Smart Dog Collar UI
+    </h1>
+    <h2>
+      Points:
+    </h2>
+    1
+    <h2>
+	Path:
+    </h2>
+	<script>
+		MQTTStart();
+	</script>
+    <canvas id="myCanvas" width="700" height="400"></canvas>
+	<script>
+		const canvas = document.getElementById('myCanvas');
 		const context = canvas.getContext('2d');
 		const x = 50;
 		const y = 50;
@@ -60,22 +79,6 @@
 		context.beginPath();
 		context.rect(0, 0, canvas.width, canvas.height);
 		context.stroke();
-    </script>
-  </head>
-  <body>
-    <h1>
-      Smart Dog Collar UI
-    </h1>
-    <h2>
-      Points:
-    </h2>
-    1
-    <h2>
-      Path:
-    </h2>
-	<script>
-		MQTTStart();
 	</script>
-    <canvas id="myCanvas" width="700" height="400"></canvas>
   </body>
 </html>      
