@@ -33,11 +33,22 @@
 			var payload = message.payloadString;
 			console.log("onMessageArrived:" + payload);
 			pathPoints.push(payload);
+
 			let list = document.getElementById("pointsList");
 			let listItem = document.createElement("li");
 			listItem.innerText = payload;
 			list.appendChild(listItem);
-			plotPoint(payload,payload);
+			
+			var jsonPoint = JSON.parse(payload)
+			if (pathPoints.length == 1) {
+				console.log('First point plotted')
+				plotPoint(jsonPoint.x,jsonPoint.y);
+			}
+			else {
+				console.log('Continuous point plotted')
+				var prevJsonPoint = JSON.parse(pathPoints[pathPoints.length-2])
+				plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
+			}
 		}
 		
 		function MQTTStart() {
@@ -54,19 +65,38 @@
     </script>
 	<script>
 		function plotPoint(xVar,yVar){
-			const canvas = document.getElementById('myCanvas');
-			const context = canvas.getContext('2d');
+			const c = document.getElementById('myCanvas');
+			const ctx = c.getContext('2d');
 			const x = xVar;
 			const y = yVar;
 			const radius = 5;
 			
-			context.beginPath();
-			context.arc(x, y, radius, 0, 2 * Math.PI, false);
-			context.fillStyle = 'red';
-			context.fill();
-			context.lineWidth = 3;
-			context.strokeStyle = 'black';
-			context.stroke();
+			ctx.globalCompositeOperation='source-over';
+
+			ctx.beginPath();
+			ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+			ctx.fillStyle = 'red';
+			ctx.fill();
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = 'black';
+			ctx.stroke();
+		}
+
+		function plotPathSegment(xVar,yVar,xVarOld,yVarOld){
+			const c = document.getElementById('myCanvas');
+			const ctx = c.getContext('2d');
+			const x = xVar;
+			const y = yVar;
+			const radius = 5;
+			
+			ctx.globalCompositeOperation='destination-over';
+
+			ctx.beginPath();
+			ctx.moveTo(xVarOld,yVarOld);
+			ctx.lineTo(xVar,yVar);
+			ctx.stroke();
+
+			plotPoint(xVar, yVar);
 		}
 	</script>
   </head>
