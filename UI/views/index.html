@@ -7,6 +7,60 @@
         padding: 0;
       }
     </style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+	<script>
+		// called when the client connects
+		function onConnect() {
+		  // Once a connection has been made, make a subscription and send a message.
+		  console.log("onConnect");
+		  client.subscribe("pathPoints");
+		  message = new Paho.MQTT.Message("WebUIOnline");
+		  message.destinationName = "status";
+		  client.send(message);
+		}
+
+		// called when the client loses its connection
+		function onConnectionLost(responseObject) {
+		  if (responseObject.errorCode !== 0) {
+			console.log("onConnectionLost:"+responseObject.errorMessage);
+		  }
+		}
+
+		// called when a message arrives
+		function onMessageArrived(message) {
+		  console.log("onMessageArrived:"+message.payloadString);
+		}
+		
+		function MQTTStart() {
+		// Create a client instance
+		client = new Paho.MQTT.Client("localhost", Number(9001), "webUI");
+
+		// set callback handlers
+		client.onConnectionLost = onConnectionLost;
+		client.onMessageArrived = onMessageArrived;
+
+		// connect the client
+		client.connect({onSuccess:onConnect});
+		}
+		
+        const canvas = document.getElementById('myCanvas');
+		const context = canvas.getContext('2d');
+		const x = 50;
+		const y = 50;
+		const radius = 5;
+		
+		context.beginPath();
+		context.arc(x, y, radius, 0, 2 * Math.PI, false);
+		context.fillStyle = 'red';
+		context.fill();
+		context.lineWidth = 3;
+		context.strokeStyle = 'black';
+		context.stroke();
+		
+		context.beginPath();
+		context.rect(0, 0, canvas.width, canvas.height);
+		context.stroke();
+    </script>
   </head>
   <body>
     <h1>
@@ -19,25 +73,9 @@
     <h2>
       Path:
     </h2>
+	<script>
+		MQTTStart();
+	</script>
     <canvas id="myCanvas" width="700" height="400"></canvas>
-    <script>
-        const canvas = document.getElementById('myCanvas');
-                const context = canvas.getContext('2d');
-                const x = 50;
-                const y = 50;
-                const radius = 5;
-                
-                context.beginPath();
-                context.arc(x, y, radius, 0, 2 * Math.PI, false);
-                context.fillStyle = 'red';
-                context.fill();
-                context.lineWidth = 3;
-                context.strokeStyle = 'black';
-                context.stroke();
-                
-                context.beginPath();
-                context.rect(0, 0, canvas.width, canvas.height);
-                context.stroke();
-    </script>
   </body>
 </html>      
