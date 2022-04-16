@@ -7,3 +7,4 @@ requests-oauthlib==1.0.0
 responses==0.12.1
 RPi.GPIO==0.7.0
 urllib3==1.26.5
+sympy==1.10.1
