@@ -1,0 +1,16 @@
+<6e:9f:94:1b:09:ca, -82> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -72> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -58> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -67> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -72> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -58> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -71> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -72> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -71> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -71> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -84> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -61> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -57> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -84> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -83> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
+<6e:9f:94:1b:09:ca, -74> EddystoneUIDFrame<tx_power: -65, namespace: 12345678912345678913, instance: 000000000000> {'namespace': '12345678912345678913', 'instance': '000000000000'}
