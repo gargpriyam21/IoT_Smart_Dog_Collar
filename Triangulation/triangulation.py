@@ -1,6 +1,16 @@
 import time
 from sympy import symbols, Eq, solve
 
+def calculate_eucleadian_distance(x1,x2,y1,y2):
+    distance = ((x1 - x2)**2 + (y1 - y2)**2)**0.5
+    return distance
+
+def trashcan_nearby(distance, threshold):
+    if distance < threshold:
+        return True
+    else:
+        return False
+
 def calculate_distance(txPower, rssi):
     N = 2
     difference = txPower - rssi
@@ -28,7 +38,9 @@ def get_coordinates(x1,x2,x3,y1,y2,y3,r1,r2,r3):
     x_sol = solve((eq1, eq2), (x, y))
     print(x_sol)
 
-    return x_sol[x], x_sol[y]
+    co_ordinates = {'x': x_sol['x'], 'y': x_sol['y']}
+
+    return co_ordinates
 
 # print(get_coordinates(100,160,70,100,120,150,50,36.06,60.83))
 
