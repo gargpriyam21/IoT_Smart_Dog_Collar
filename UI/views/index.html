@@ -13,12 +13,16 @@
 		
 		// called when the client connects
 		function onConnect() {
-		  // Once a connection has been made, make a subscription and send a message.
-		  console.log("onConnect");
-		  client.subscribe("pathPoints");
-		  message = new Paho.MQTT.Message("WebUI - Online");
-		  message.destinationName = "status";
-		  client.send(message);
+			// Once a connection has been made, make a subscription and send a message.
+			console.log("onConnect");
+			client.subscribe("pathPoints");
+			//client.subscribe("ncsu/iot/DogWalkingStatus");
+			//client.subscribe("ncsu/iot/DogCoordinates");
+			//client.subscribe("ncsu/iot/TrashCanInDanger");
+
+			message = new Paho.MQTT.Message("WebUI_Online");
+			message.destinationName = "status";
+			client.send(message);
 		}
 
 		// called when the client loses its connection
@@ -31,7 +35,8 @@
 		// called when a message arrives
 		function onMessageArrived(message) {
 			var payload = message.payloadString;
-			console.log("onMessageArrived:" + payload);
+			console.log("onMessageArrived:" + payload); //Add topic
+			
 			pathPoints.push(payload);
 
 			let list = document.getElementById("pointsList");
@@ -51,16 +56,44 @@
 			}
 		}
 		
+		function pointMsgArrived(payload) {
+			pathPoints.push(payload);
+
+			let list = document.getElementById("pointsList");
+			let listItem = document.createElement("li");
+			listItem.innerText = payload;
+			list.appendChild(listItem);
+			
+			var jsonPoint = JSON.parse(payload)
+			if (pathPoints.length == 1) {
+				console.log('First point plotted')
+				plotPoint(jsonPoint.x,jsonPoint.y);
+			}
+			else {
+				console.log('Continuous point plotted')
+				var prevJsonPoint = JSON.parse(pathPoints[pathPoints.length-2])
+				plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
+			}
+		}
+		
+		function dogStatusArrived(payload){
+			
+		}
+		
+		function trashStatusArrived(payload){
+			
+		}
+		
 		function MQTTStart() {
-		// Create a client instance
-		client = new Paho.MQTT.Client("localhost", Number(9001), "webUI");
+			// Create a client instance
+			client = new Paho.MQTT.Client("localhost", Number(9001), "webUI");
 
-		// set callback handlers
-		client.onConnectionLost = onConnectionLost;
-		client.onMessageArrived = onMessageArrived;
+			// set callback handlers
+			client.onConnectionLost = onConnectionLost;
+			client.onMessageArrived = onMessageArrived;
 
-		// connect the client
-		client.connect({onSuccess:onConnect});
+			// connect the client
+			client.connect({onSuccess:onConnect});
 		}
     </script>
 	<script>
