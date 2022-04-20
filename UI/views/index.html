@@ -10,18 +10,20 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 	<script>
 		var pathPoints = [];
+		var TOPIC_DOGSTATUS = "ncsu/iot/DogWalkingStatus";
+		var TOPIC_DOGLOCATION = "ncsu/iot/DogCoordinates";
+		var TOPIC_TRASHSTATUS = "ncsu/iot/TrashCanInDanger";
 		
 		// called when the client connects
 		function onConnect() {
 			// Once a connection has been made, make a subscription and send a message.
 			console.log("onConnect");
-			client.subscribe("pathPoints");
-			//client.subscribe("ncsu/iot/DogWalkingStatus");
-			//client.subscribe("ncsu/iot/DogCoordinates");
-			//client.subscribe("ncsu/iot/TrashCanInDanger");
+			client.subscribe(TOPIC_DOGSTATUS);
+			client.subscribe(TOPIC_DOGLOCATION);
+			client.subscribe(TOPIC_TRASHSTATUS);
 
 			message = new Paho.MQTT.Message("WebUI_Online");
-			message.destinationName = "status";
+			message.destinationName = "ncsu/iot/DeviceStatus";
 			client.send(message);
 		}
 
@@ -35,24 +37,16 @@
 		// called when a message arrives
 		function onMessageArrived(message) {
 			var payload = message.payloadString;
-			console.log("onMessageArrived:" + payload); //Add topic
-			
-			pathPoints.push(payload);
+			var topic = message.destinationName;
 
-			let list = document.getElementById("pointsList");
-			let listItem = document.createElement("li");
-			listItem.innerText = payload;
-			list.appendChild(listItem);
-			
-			var jsonPoint = JSON.parse(payload)
-			if (pathPoints.length == 1) {
-				console.log('First point plotted')
-				plotPoint(jsonPoint.x,jsonPoint.y);
+			if (topic == TOPIC_DOGSTATUS) {
+				dogStatusArrived(payload);
 			}
-			else {
-				console.log('Continuous point plotted')
-				var prevJsonPoint = JSON.parse(pathPoints[pathPoints.length-2])
-				plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
+			else if (topic == TOPIC_DOGLOCATION) {
+				pointMsgArrived(payload);
+			}
+			else if (topic == TOPIC_TRASHSTATUS) {
+				trashStatusArrived(payload);
 			}
 		}
 		
@@ -66,22 +60,23 @@
 			
 			var jsonPoint = JSON.parse(payload)
 			if (pathPoints.length == 1) {
-				console.log('First point plotted')
 				plotPoint(jsonPoint.x,jsonPoint.y);
 			}
 			else {
-				console.log('Continuous point plotted')
 				var prevJsonPoint = JSON.parse(pathPoints[pathPoints.length-2])
 				plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
 			}
+			console.log("Plot point...");
 		}
 		
 		function dogStatusArrived(payload){
-			
+			let statusField = document.getElementById("dogStatus");
+			statusField.innerHTML = payload;
 		}
 		
 		function trashStatusArrived(payload){
-			
+			let statusField = document.getElementById("trashStatus");
+			statusField.innerHTML = payload;
 		}
 		
 		function MQTTStart() {
@@ -156,5 +151,10 @@
 	Points:
 	</h2>
 	<ol id="pointsList"></ol>
+	<h2>
+	Status:
+	</h2>
+	<p id="dogStatus">Unavailable</p>
+	<p id="trashStatus">Unavailable</p>
   </body>
 </html>      
