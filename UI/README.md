@@ -7,12 +7,12 @@ This folder contains the necessary files for running the webpage UI to view the 
 
 ## Environment
 - Python 3.7.3
-- nodejs *Insert Version Number*
+- nodejs v12.22.12
 
 ## Requirements
 ### Software
 - Python3 3.7.3
-- nodejs *Insert Version Number*
+- nodejs v12.22.12
 - mosquitto
 
 *Confim all setup instructions*
@@ -27,7 +27,7 @@ Server can be hosted on a raspberry pi or linux laptop using the provided method
 - Complete setup steps above
 - From the *project*/UI folder, run:
 ```
-nodejs server.js
+node server.js
 ```
 This will start the nodejs webserver on your localhost using port 8080
 
