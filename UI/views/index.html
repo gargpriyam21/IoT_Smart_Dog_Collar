@@ -13,6 +13,7 @@
 		var TOPIC_DOGSTATUS = "ncsu/iot/DogWalkingStatus";
 		var TOPIC_DOGLOCATION = "ncsu/iot/DogCoordinates";
 		var TOPIC_TRASHSTATUS = "ncsu/iot/TrashCanInDanger";
+		var numPointsPlotting = 5;
 		
 		// called when the client connects
 		function onConnect() {
@@ -51,6 +52,10 @@
 		}
 		
 		function pointMsgArrived(payload) {
+			if (pathPoints.length+1 > numPointsPlotting) {
+				pathPoints.shift();
+				clearCanvas();
+			}
 			pathPoints.push(payload);
 
 			let list = document.getElementById("pointsList");
@@ -58,14 +63,27 @@
 			listItem.innerText = payload;
 			list.appendChild(listItem);
 			
-			var jsonPoint = JSON.parse(payload)
-			if (pathPoints.length == 1) {
-				plotPoint(jsonPoint.x,jsonPoint.y);
+			for (let i = 0; i < pathPoints.length; i++) {
+				console.log("Loop " + i);
+				console.log(pathPoints[i]);
+				var jsonPoint = JSON.parse(pathPoints[i]);
+				if (i == 0) {
+					plotPoint(jsonPoint.x,jsonPoint.y);
+				}
+				else {
+					var prevJsonPoint = JSON.parse(pathPoints[i-1])
+					plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
+				}
 			}
-			else {
-				var prevJsonPoint = JSON.parse(pathPoints[pathPoints.length-2])
-				plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
-			}
+
+			// var jsonPoint = JSON.parse(payload)
+			// if (pathPoints.length == 1) {
+			// 	plotPoint(jsonPoint.x,jsonPoint.y);
+			// }
+			// else {
+			// 	var prevJsonPoint = JSON.parse(pathPoints[pathPoints.length-2])
+			// 	plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
+			// }
 			console.log("Plot point...");
 		}
 		
@@ -125,6 +143,18 @@
 			ctx.stroke();
 
 			plotPoint(xVar, yVar);
+		}
+		
+		function clearCanvas(){
+			const c = document.getElementById('myCanvas');
+			const ctx = c.getContext('2d');
+			ctx.clearRect(0, 0, c.width, c.height);
+			
+			console.log("Clearing canvas...");
+			
+			context.beginPath();
+			context.rect(0, 0, canvas.width, canvas.height);
+			context.stroke();
 		}
 	</script>
   </head>
