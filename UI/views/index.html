@@ -75,15 +75,6 @@
 					plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
 				}
 			}
-
-			// var jsonPoint = JSON.parse(payload)
-			// if (pathPoints.length == 1) {
-			// 	plotPoint(jsonPoint.x,jsonPoint.y);
-			// }
-			// else {
-			// 	var prevJsonPoint = JSON.parse(pathPoints[pathPoints.length-2])
-			// 	plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
-			// }
 			console.log("Plot point...");
 		}
 		
@@ -178,13 +169,13 @@
 		context.stroke();
 	</script>
 	<h2>
-	Points:
-	</h2>
-	<ol id="pointsList"></ol>
-	<h2>
 	Status:
 	</h2>
 	<p id="dogStatus">Unavailable</p>
 	<p id="trashStatus">Unavailable</p>
+	<h2>
+	Points:
+	</h2>
+	<ol id="pointsList"></ol>
   </body>
 </html>      
