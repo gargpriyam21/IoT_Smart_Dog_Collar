@@ -14,7 +14,6 @@ def get_mag(sensor):
         mag = mag + ((vals[i]) ** 2)
     return np.sqrt(mag)
 
-
 """
 Main loop logic:
 -Determines dog status using the "diff" variable
@@ -43,7 +42,7 @@ def calculate_dog_status(diff, mqtt_dog_publisher, rest_counter, status):
 
 
 def main():
-    mag = [0, 0, 0]
+    mag = [rest_val]*3
     status = "DogStill"
     mqtt_dog_publisher = client.Client()
     mqtt_dog_publisher.connect(BROKER, port=PORT)
@@ -51,7 +50,8 @@ def main():
     rest_counter = [0]
 
     while True:
-        avg_mag = find_moving_average(mag, get_mag(mpu))
+        mag_mpu = get_mag(mpu)
+        avg_mag = find_moving_average(mag, mag_mpu)
         diff = np.abs(rest_val - avg_mag)
 
         status = calculate_dog_status(diff, mqtt_dog_publisher, rest_counter, status)
