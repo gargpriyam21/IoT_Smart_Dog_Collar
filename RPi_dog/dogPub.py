@@ -4,10 +4,12 @@ import numpy as np
 import time
 from constants import *
 from helpers import *
+from Triangulation.triangulation import *
 
 
 def get_mag(sensor):
-    vals = [sensor.get_accel_data().get('x'), sensor.get_accel_data().get('y'), sensor.get_accel_data().get('z')]
+    acceleration_data = sensor.get_accel_data()
+    vals = [acceleration_data.get('x'), acceleration_data.get('y'), acceleration_data.get('z')]
     mag = 0
     for i in range(0, 3):
         # mag = mag + ((vals[i]-offset[i])**2)
@@ -55,6 +57,7 @@ def main():
         diff = np.abs(rest_val - avg_mag)
 
         status = calculate_dog_status(diff, mqtt_dog_publisher, rest_counter, status)
+
 
         time.sleep(IMU_SAMPLING_RATE)
     # print(diff)
