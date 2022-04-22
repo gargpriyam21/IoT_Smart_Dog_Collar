@@ -1,3 +1,14 @@
+# MQTT Constants
+BROKER = '192.168.86.21'
+PORT = 4000
+KEEP_ALIVE = 100
+
+topic_send = "ncsu/iot/TrashCanInDanger"
+
+topic_position = "ncsu/iot/DogCoordinates"
+
+topic_subscribe = "ncsu/iot/DogWalkingStatus"
+
 ## Namespace of the beacons to be scanned
 BEACON1_NAMESPACE = "12345678912345678913"
 BEACON2_NAMESPACE = "12345678912345678914"
@@ -20,22 +31,5 @@ BEACON1_TXPOWER = -65
 BEACON2_TXPOWER = -65
 BEACON3_TXPOWER = -65
 
-# Initializing the Trash Can's X and Y coordinates
-TRASH_CAN_X_COORDINATE = 0
-TRASH_CAN_Y_COORDINATE = 0
-
-# Defining the Threshold for the trash can nearby
-TRASH_CAN_THRESHOLD = 0.5
-
 # Defining the timeout for each data reading
 TIMEOUT = 1
-
-BROKER = '192.168.86.21'
-PORT = 4000
-KEEP_ALIVE = 100
-
-topic_send = "ncsu/iot/TrashCanInDanger"
-
-topic_position = "ncsu/iot/DogCoordinates"
-
-topic_subscribe = "ncsu/iot/DogWalkingStatus"
