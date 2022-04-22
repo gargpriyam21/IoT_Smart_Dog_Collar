@@ -7,6 +7,7 @@ from mpu6050 import mpu6050
 import numpy as np
 from constants import *
 import paho.mqtt.client as client
+from copy import deepcopy
 
 # Creating Queue for the beacons
 BEACON1_Q = deque()
@@ -44,19 +45,11 @@ def calculate_dog_position():
         current_dog_coordinates = get_coordinates(BEACON1_X_COORDINATE, BEACON2_X_COORDINATE, BEACON3_X_COORDINATE,
                                               BEACON1_Y_COORDINATE, BEACON2_Y_COORDINATE, BEACON3_Y_COORDINATE, r1,
                                               r2, r3)
+        # print(r1, " ", r2, " ", r3, " ", current_dog_coordinates)
 
         if publish_dog_coordinates:
-            dog_moving_status_subscriber.publish(topic_position, current_dog_coordinates)
+            dog_moving_status_subscriber.publish(topic_position, str(current_dog_coordinates))
 
-        """
-        nearby_distance = calculate_eucleadian_distance(current_dog_coordinates['x'], current_dog_coordinates['y'],
-                                                       TRASH_CAN_X_COORDINATE, TRASH_CAN_Y_COORDINATE)
-        if trashcan_nearby(nearby_distance, TRASH_CAN_THRESHOLD):
-            dog_moving_status_subscriber.publish(topic_send, "DogNearBy")
-            print("Dog is near the trash can")
-        else:
-            dog_moving_status_subscriber.publish(topic_send, "")
-        """
 
 def get_radius(TxPower, RSSI_values):
     distances = []
@@ -74,8 +67,11 @@ def get_radius(TxPower, RSSI_values):
     if RSSI_values[2] != 0:
         distances.append(d3)
 
-    radius = sum(distances)/len(distances)
-
+    if len(distances) != 0:
+        radius = sum(distances)/len(distances)
+    else:
+        radius = 0
+    
     return radius
     
 
@@ -90,11 +86,11 @@ def beacon1_callback(bt_addr, rssi, packet, additional_info):
     PAST_BEACON1_RSSI[1] = PAST_BEACON1_RSSI[0]
     PAST_BEACON1_RSSI[0] = BEACON1_RSSI
 
-    r1 = get_radius(BEACON1_TXPOWER, PAST_BEACON1_RSSI)
+    r1 = get_radius(BEACON1_TXPOWER, deepcopy(PAST_BEACON1_RSSI))
 
     BEACON1_Q.append(r1)
 
-    calculate_dog_position()
+    # calculate_dog_position()
 
 
 def beacon2_callback(bt_addr, rssi, packet, additional_info):
@@ -108,11 +104,11 @@ def beacon2_callback(bt_addr, rssi, packet, additional_info):
     PAST_BEACON2_RSSI[1] = PAST_BEACON2_RSSI[0]
     PAST_BEACON2_RSSI[0] = BEACON2_RSSI
 
-    r2 = get_radius(BEACON1_TXPOWER, PAST_BEACON1_RSSI)
+    r2 = get_radius(BEACON2_TXPOWER, deepcopy(PAST_BEACON2_RSSI))
 
     BEACON2_Q.append(r2)
 
-    calculate_dog_position()
+    # calculate_dog_position()
 
 
 def beacon3_callback(bt_addr, rssi, packet, additional_info):
@@ -126,94 +122,54 @@ def beacon3_callback(bt_addr, rssi, packet, additional_info):
     PAST_BEACON3_RSSI[1] = PAST_BEACON3_RSSI[0]
     PAST_BEACON3_RSSI[0] = BEACON3_RSSI
 
-    r3 = get_radius(BEACON1_TXPOWER, PAST_BEACON1_RSSI)
+    r3 = get_radius(BEACON3_TXPOWER, deepcopy(PAST_BEACON3_RSSI))
 
     BEACON3_Q.append(r3)
 
+    # calculate_dog_position()
+
+def on_callback(bt_addr, rssi, packet, additional_info):
+
+    if packet.namespace == BEACON1_NAMESPACE:
+        beacon1_callback(bt_addr, rssi, packet, additional_info)
+    elif packet.namespace == BEACON2_NAMESPACE:
+        beacon2_callback(bt_addr, rssi, packet, additional_info)
+    elif packet.namespace == BEACON3_NAMESPACE:
+        beacon3_callback(bt_addr, rssi, packet, additional_info)
+
     calculate_dog_position()
 
+def on_connect(client, userdata, flags, rc):
+    print("Connected to the Broker with result code "+str(rc))
 
 def on_message(client, userdata, message):
     global publish_dog_coordinates, current_dog_coordinates
     dog_moving_status = str(message.payload.decode("utf-8"))
     if dog_moving_status == "DogMoving":
-        client.publish(topic_position, current_dog_coordinates)
+        client.publish(topic_position, str(current_dog_coordinates))
         publish_dog_coordinates = True
     elif dog_moving_status == "DogStill":
         publish_dog_coordinates = False
 
 
 def main():
-    BEACON1_scanner = BeaconScanner(callback=beacon1_callback,
-                                    filter=EddystoneFilter(namespaces=BEACON1_NAMESPACE)
+    beacon_scanner = BeaconScanner(callback=on_callback,
+                                    device_filter=[EddystoneFilter(namespace=BEACON1_NAMESPACE),EddystoneFilter(namespace=BEACON2_NAMESPACE),EddystoneFilter(namespace=BEACON3_NAMESPACE)]
                                     )
 
-    BEACON2_scanner = BeaconScanner(callback=beacon2_callback,
-                                    filter=EddystoneFilter(namespaces=BEACON2_NAMESPACE)
-                                    )
-
-    BEACON3_scanner = BeaconScanner(callback=beacon3_callback,
-                                    filter=EddystoneFilter(namespaces=BEACON3_NAMESPACE)
-                                    )
-
+    dog_moving_status_subscriber.on_connect = on_connect
     dog_moving_status_subscriber.on_message = on_message
     dog_moving_status_subscriber.connect(BROKER, port=PORT, keepalive=KEEP_ALIVE)
     dog_moving_status_subscriber.loop_start()
     dog_moving_status_subscriber.subscribe(topic_subscribe)
+    
+    beacon_scanner.start()
 
     while True:
-        BEACON1_scanner.start()
-        BEACON2_scanner.start()
-        BEACON3_scanner.start()
-
-        # if len(BEACON1_Q) > 0 and len(BEACON2_Q) > 0 and len(BEACON3_Q) > 0:
-        #     r1 = BEACON1_Q.popleft()
-        #     r2 = BEACON2_Q.popleft()
-        #     r3 = BEACON3_Q.popleft()
-        #
-        #     current_coordinates = get_coordinates(BEACON1_X_COORDINATE, BEACON2_X_COORDINATE, BEACON3_X_COORDINATE,
-        #                                           BEACON1_Y_COORDINATE, BEACON2_Y_COORDINATE, BEACON3_Y_COORDINATE, r1,
-        #                                           r2, r3)
-        #
-        #     """
-        #     if dog is still and not moving:
-        #         publish the coordinates to the topic "DogCoordinates" via MQTT
-        #
-        #         also print published coordinates to the topic "DogCoordinates"
-        #     """
-        #     mqtt_dog_publisher.publish(topic_position, current_coordinates)
-
-            # nearby_distace = calculate_eucleadian_distance(current_dog_coordinates['x'], current_dog_coordinates['y'],
-            #                                                TRASH_CAN_X_COORDINATE, TRASH_CAN_Y_COORDINATE)
-
-            # if trashcan_nearby(nearby_distace, TRASH_CAN_THRESHOLD):
-            #     mqtt_dog_publisher.publish(topic_send, "DogNearBy")
-            #     print("Dog is near the trash can")
-            # else:
-            #     mqtt_dog_publisher.publish(topic_send, "")
-
-        """
-        if trashcan is moving:
-            publish "DogPlayingWithTrashCan" to the topic "TrashCanInDanger" via MQTT
-        else:
-            publish "DogNotNearTrashCan" to the topic "TrashCanInDanger" via MQTT  
-
-        
-        if (avg_mag > threshold) & (status == "Idle"):
-            status = "Bumped"
-            # Publish status
-            mqtt_dog_publisher.publish(topic_send, "DogPlayingWithTrashCan")
-            print("Trashcan Bumped")
-            time.sleep(3)
-        elif (avg_mag < threshold) & (status == "Bumped"):
-            status = "Idle"
-            mqtt_dog_publisher.publish(topic_send, "DogNotNearTrashCan")
-
-            # Publish status
-            print("Trashcan not moving")
-        """
-
         time.sleep(TIMEOUT)
+        BEACON1_Q.clear()
+        BEACON2_Q.clear()
+        BEACON3_Q.clear()
 
 
 if __name__ == '__main__':
