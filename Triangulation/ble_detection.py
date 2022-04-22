@@ -10,8 +10,8 @@ import numpy as np
 
 ## Namespace of the beacons to be scanned
 BEACON1_NAMESPACE = "12345678912345678913"
-BEACON2_NAMESPACE = "12345678912345678914"
-BEACON3_NAMESPACE = "12345678912345678914"
+BEACON2_NAMESPACE = "12345678912345678912"
+BEACON3_NAMESPACE = "12345678912345678911"
 
 ## Beacon 1 coordinates
 BEACON1_X_COORDINATE = 0
@@ -26,7 +26,7 @@ BEACON3_X_COORDINATE = 0
 BEACON3_Y_COORDINATE = 0
 
 # Initializing the Tx power for each beacon
-BEACON1_TXPOWER = -65   
+BEACON1_TXPOWER = -65
 BEACON2_TXPOWER = -65
 BEACON3_TXPOWER = -65
 
@@ -148,10 +148,6 @@ def get_mag(sensor, offset):
         mag = mag + ((vals[i]-offset[i])**2)
     return np.sqrt(mag)
 
-
-
-
-
 if __name__ == '__main__':
     mag = [0,0,0]
     status = "Idle"
@@ -216,6 +212,7 @@ if __name__ == '__main__':
             mqtt_dog_publisher.publish(topic_send,"DogPlayingWithTrashCan")
             print("Trashcan Bumped")
             time.sleep(3)
+            
         elif (avg_mag < threshold) & (status == "Bumped"):
             status = "Idle"
             mqtt_dog_publisher.publish(topic_send,"DogNotNearTrashCan")
