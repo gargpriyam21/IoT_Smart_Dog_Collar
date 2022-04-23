@@ -8,6 +8,7 @@ import numpy as np
 from constants import *
 import paho.mqtt.client as client
 from copy import deepcopy
+import json
 
 # Creating Queue for the beacons
 BEACON1_Q = deque()
@@ -19,8 +20,8 @@ PAST_BEACON1_RSSI = [0, 0, 0]
 PAST_BEACON2_RSSI = [0, 0, 0]
 PAST_BEACON3_RSSI = [0, 0, 0]
 
-current_dog_coordinates = {'x': 0, 'y': 0}
-dog_moving_status_subscriber = client.Client()
+current_dog_coordinates = {"x": 0, "y": 0}
+dog_moving_status_subscriber = client.Client("Triangulation")
 publish_dog_coordinates = False
 
 def calculate_dog_position():
@@ -48,7 +49,7 @@ def calculate_dog_position():
         # print(r1, " ", r2, " ", r3, " ", current_dog_coordinates)
 
         if publish_dog_coordinates:
-            dog_moving_status_subscriber.publish(topic_position, str(current_dog_coordinates))
+            dog_moving_status_subscriber.publish(topic_position, str(current_dog_coordinates).replace("'",'"'))
 
 
 def get_radius(TxPower, RSSI_values):
@@ -146,7 +147,7 @@ def on_message(client, userdata, message):
     global publish_dog_coordinates, current_dog_coordinates
     dog_moving_status = str(message.payload.decode("utf-8"))
     if dog_moving_status == "DogMoving":
-        client.publish(topic_position, str(current_dog_coordinates))
+        client.publish(topic_position, str(current_dog_coordinates).replace("'",'"'))
         publish_dog_coordinates = True
     elif dog_moving_status == "DogStill":
         publish_dog_coordinates = False
