@@ -32,4 +32,4 @@ BEACON2_TXPOWER = -65
 BEACON3_TXPOWER = -65
 
 # Defining the timeout for each data reading
-TIMEOUT = 1
+TIMEOUT = 0.5
