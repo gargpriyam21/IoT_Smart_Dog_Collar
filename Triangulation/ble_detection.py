@@ -23,6 +23,7 @@ PAST_BEACON3_RSSI = [0, 0, 0]
 current_dog_coordinates = {"x": 0, "y": 0}
 dog_moving_status_subscriber = client.Client("Triangulation")
 publish_dog_coordinates = False
+dog_near_trashcan = False
 
 def calculate_dog_position():
     """
@@ -134,6 +135,7 @@ def beacon3_callback(bt_addr, rssi, packet, additional_info):
     # calculate_dog_position()
 
 def on_callback(bt_addr, rssi, packet, additional_info):
+    global dog_near_trashcan
 
     if packet.namespace == BEACON1_NAMESPACE:
         # print("beacon 1 rssi = ", rssi)cl
@@ -144,6 +146,13 @@ def on_callback(bt_addr, rssi, packet, additional_info):
     elif packet.namespace == BEACON3_NAMESPACE:
         # print("beacon 3 rssi = ", rssi)
         beacon3_callback(bt_addr, rssi, packet, additional_info)
+    elif packet.namespace == BEACON4_NAMESPACE:
+        if rssi > DOG_TRASHCAN_NEARBY_THRESHOLD and not dog_near_trashcan:
+            dog_near_trashcan = True
+            dog_moving_status_subscriber.publish(topic_inform_trashcan, "DogNearby")
+        elif rssi < DOG_TRASHCAN_NEARBY_THRESHOLD and dog_near_trashcan:
+            dog_near_trashcan = False
+            dog_moving_status_subscriber.publish(topic_inform_trashcan, "DogWentAway")
 
     calculate_dog_position()
 

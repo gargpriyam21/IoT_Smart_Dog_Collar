@@ -9,10 +9,13 @@ topic_position = "ncsu/iot/DogCoordinates"
 
 topic_subscribe = "ncsu/iot/DogWalkingStatus"
 
+topic_inform_trashcan = "ncsu/iot/InformTrashcanOwner"
+
 ## Namespace of the beacons to be scanned
 BEACON1_NAMESPACE = "12345678912345678911"
 BEACON2_NAMESPACE = "12345678912345678912"
 BEACON3_NAMESPACE = "12345678912345678913"
+BEACON4_NAMESPACE = "12345678912345678914"
 
 ## Beacon 1 coordinates
 BEACON1_X_COORDINATE = 3.5
@@ -33,3 +36,5 @@ BEACON3_TXPOWER = -65
 
 # Defining the timeout for each data reading
 TIMEOUT = 0.5
+
+DOG_TRASHCAN_NEARBY_THRESHOLD = -69

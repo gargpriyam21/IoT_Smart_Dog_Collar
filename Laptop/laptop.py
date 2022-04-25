@@ -11,7 +11,8 @@ from paho.mqtt import client as mqtt
 BROKER_IP_ADDRESS = '192.168.1.163'
 PORT = 1883
 KEEPALIVE = 60
-MQTT_TOPICS = [("ncsu/iot/DogWalkingStatus",2), ("ncsu/iot/TrashCanInDanger",2), ("ncsu/iot/DogCoordinates",2)]
+MQTT_TOPICS = [("ncsu/iot/DogWalkingStatus",2), ("ncsu/iot/TrashCanInDanger",2), ("ncsu/iot/DogCoordinates",2),
+               ("ncsu/iot/InformTrashcanOwner", 2)]
 
 
 def on_connect(client, userdata, flags, rc):

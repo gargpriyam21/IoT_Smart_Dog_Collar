@@ -9,14 +9,11 @@ from Triangulation.triangulation import *
 mpu = mpu6050(0x68)
 status = "Idle"
 
-def dogNearBy(dog_coordinates):
-    nearby_distance = calculate_eucleadian_distance(dog_coordinates['x'], dog_coordinates['y'],
-                                                   TRASH_CAN_X_COORDINATE, TRASH_CAN_Y_COORDINATE)
-    
-    if trashcan_nearby(nearby_distance, TRASH_CAN_THRESHOLD):
-        return True
-    else:
-        return False
+# def dogNearBy(dog_nearby_status):
+#     if dog_nearby_status == "DogNearby":
+#         return True
+#     else:
+#         return False
 
 def calibrate(sensors):
     #get 5 samples from x,y and z coordinates
@@ -44,12 +41,14 @@ def get_mag(sensor, offset):
         mag = mag + ((vals[i]-offset[i])**2)
     return np.sqrt(mag)
 
-def on_message(client, userdata, message):
-    dog_coordinates = json.loads(message.payload.decode("utf-8"))
+# def on_message(client, userdata, message):
+#     dog_nearby_status = json.loads(message.payload.decode("utf-8"))
+#
+#     if dogNearBy(dog_nearby_status) and status != "Bumped":
+#         client.publish(TRASH_CAN_TOPIC, "DogNearBy", qos=2)
+#         print("Dog is near the trash can")
+#     elif not dogNearBy(dog_nearby_status) and status != "Idle":
 
-    if dogNearBy(dog_coordinates) and status != "Bumped":
-        client.publish(TRASH_CAN_TOPIC, "DogNearBy", qos=2)
-        print("Dog is near the trash can")
 
 def main():
     global status
@@ -57,7 +56,7 @@ def main():
     trashCanClient = client.Client()
     trashCanClient.connect(BROKER, port=PORT)
 
-    trashCanClient.subscribe(topic_position, qos=2)
+    # trashCanClient.subscribe(topic_inform_trashcan, qos=2)
 
     mag = [0,0,0]
     status = "Idle"

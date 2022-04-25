@@ -3,7 +3,6 @@ PORT = 4000
 
 TRASH_CAN_TOPIC = "ncsu/iot/TrashCanInDanger"
 
-topic_position = "ncsu/iot/DogCoordinates"
 
 # Initializing the Trash Can's X and Y coordinates
 TRASH_CAN_X_COORDINATE = 0
