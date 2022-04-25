@@ -48,12 +48,16 @@ def on_connect(client, userdata, flags, rc):
     print("Connected to the Broker with result code "+str(rc))
 
 def main():
+
     mag = [rest_val]*3
     status = "DogStill"
-    mqtt_dog_publisher = client.Client()
+    mqtt_dog_publisher = client.Client("RPi_Dog")
 
     mqtt_dog_publisher.on_connect = on_connect
+
     mqtt_dog_publisher.connect(BROKER, port=PORT, keepalive=2000)
+
+    mqtt_dog_publisher.loop_start()
 
     mpu = mpu6050(0x68)
     rest_counter = [0]

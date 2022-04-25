@@ -8,6 +8,7 @@ import numpy as np
 from constants import *
 import paho.mqtt.client as client
 from copy import deepcopy
+import json
 
 # Creating Queue for the beacons
 BEACON1_Q = deque()
@@ -19,8 +20,8 @@ PAST_BEACON1_RSSI = [0, 0, 0]
 PAST_BEACON2_RSSI = [0, 0, 0]
 PAST_BEACON3_RSSI = [0, 0, 0]
 
-current_dog_coordinates = {'x': 0, 'y': 0}
-dog_moving_status_subscriber = client.Client()
+current_dog_coordinates = {"x": 0, "y": 0}
+dog_moving_status_subscriber = client.Client("Triangulation")
 publish_dog_coordinates = False
 
 def calculate_dog_position():
@@ -45,14 +46,18 @@ def calculate_dog_position():
         current_dog_coordinates = get_coordinates(BEACON1_X_COORDINATE, BEACON2_X_COORDINATE, BEACON3_X_COORDINATE,
                                               BEACON1_Y_COORDINATE, BEACON2_Y_COORDINATE, BEACON3_Y_COORDINATE, r1,
                                               r2, r3)
-        # print(r1, " ", r2, " ", r3, " ", current_dog_coordinates)
+        # print(len(BEACON1_Q), " ", len(BEACON2_Q), " ", len(BEACON3_Q), " ", current_dog_coordinates)
 
         if publish_dog_coordinates:
-            dog_moving_status_subscriber.publish(topic_position, str(current_dog_coordinates))
+            dog_moving_status_subscriber.publish(topic_position, str(current_dog_coordinates).replace("'",'"'))
 
 
 def get_radius(TxPower, RSSI_values):
     distances = []
+
+    def weighted_average(arr):
+        weights = [2] + [1]*(len(arr)-1)
+        return np.average(np.array(arr), weights=np.array(weights))
 
     d3 = calculate_distance(TxPower, RSSI_values[2])
     d2 = calculate_distance(TxPower, RSSI_values[1])
@@ -68,7 +73,7 @@ def get_radius(TxPower, RSSI_values):
         distances.append(d3)
 
     if len(distances) != 0:
-        radius = sum(distances)/len(distances)
+        radius = weighted_average(distances)
     else:
         radius = 0
     
@@ -131,10 +136,13 @@ def beacon3_callback(bt_addr, rssi, packet, additional_info):
 def on_callback(bt_addr, rssi, packet, additional_info):
 
     if packet.namespace == BEACON1_NAMESPACE:
+        # print("beacon 1 rssi = ", rssi)cl
         beacon1_callback(bt_addr, rssi, packet, additional_info)
     elif packet.namespace == BEACON2_NAMESPACE:
+        # print("beacon 2 rssi = ", rssi)
         beacon2_callback(bt_addr, rssi, packet, additional_info)
     elif packet.namespace == BEACON3_NAMESPACE:
+        # print("beacon 3 rssi = ", rssi)
         beacon3_callback(bt_addr, rssi, packet, additional_info)
 
     calculate_dog_position()
@@ -146,7 +154,7 @@ def on_message(client, userdata, message):
     global publish_dog_coordinates, current_dog_coordinates
     dog_moving_status = str(message.payload.decode("utf-8"))
     if dog_moving_status == "DogMoving":
-        client.publish(topic_position, str(current_dog_coordinates))
+        client.publish(topic_position, str(current_dog_coordinates).replace("'",'"'))
         publish_dog_coordinates = True
     elif dog_moving_status == "DogStill":
         publish_dog_coordinates = False
