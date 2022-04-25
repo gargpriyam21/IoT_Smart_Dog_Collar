@@ -6,6 +6,6 @@ PORT = 1883
 KEEP_ALIVE = 100
 
 #TODO: Brendan
-rest_val = 8
+rest_val = 10
 
 topic_send = "ncsu/iot/DogWalkingStatus"
