@@ -5,6 +5,6 @@ BROKER = '192.168.1.163'
 PORT = 1883
 KEEP_ALIVE = 100
 
-rest_val = 8 #approximate value of accel magnitude at rest
+rest_val = 10
 
 topic_send = "ncsu/iot/DogWalkingStatus"

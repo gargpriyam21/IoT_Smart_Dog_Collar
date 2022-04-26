@@ -4,10 +4,14 @@ import numpy as np
 import time
 from constants import *
 from helpers import *
+import sys
+sys.path.insert(1, '/home/pi/Documents/IoT_Final_Group11/Triangulation/')
+from triangulation import *
 
 
 def get_mag(sensor):
-    vals = [sensor.get_accel_data().get('x'), sensor.get_accel_data().get('y'), sensor.get_accel_data().get('z')]
+    acceleration_data = sensor.get_accel_data()
+    vals = [acceleration_data.get('x'), acceleration_data.get('y'), acceleration_data.get('z')]
     mag = 0
     for i in range(0, 3):
         # mag = mag + ((vals[i]-offset[i])**2)
@@ -40,12 +44,21 @@ def calculate_dog_status(diff, mqtt_dog_publisher, rest_counter, status):
             print("Dog is idle")
     return status
 
+def on_connect(client, userdata, flags, rc):
+    print("Connected to the Broker with result code "+str(rc))
 
 def main():
+
     mag = [rest_val]*3
     status = "DogStill"
-    mqtt_dog_publisher = client.Client()
-    mqtt_dog_publisher.connect(BROKER, port=PORT)
+    mqtt_dog_publisher = client.Client("RPi_Dog")
+
+    mqtt_dog_publisher.on_connect = on_connect
+
+    mqtt_dog_publisher.connect(BROKER, port=PORT, keepalive=2000)
+
+    mqtt_dog_publisher.loop_start()
+
     mpu = mpu6050(0x68)
     rest_counter = [0]
 
@@ -55,6 +68,7 @@ def main():
         diff = np.abs(rest_val - avg_mag)
 
         status = calculate_dog_status(diff, mqtt_dog_publisher, rest_counter, status)
+
 
         time.sleep(IMU_SAMPLING_RATE)
     # print(diff)

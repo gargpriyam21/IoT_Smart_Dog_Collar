@@ -13,7 +13,7 @@
 		var TOPIC_DOGSTATUS = "ncsu/iot/DogWalkingStatus";
 		var TOPIC_DOGLOCATION = "ncsu/iot/DogCoordinates";
 		var TOPIC_TRASHSTATUS = "ncsu/iot/TrashCanInDanger";
-		var numPointsPlotting = 5;
+		var numPointsPlotting = 200;
 		
 		// called when the client connects
 		function onConnect() {
@@ -90,7 +90,7 @@
 		
 		function MQTTStart() {
 			// Create a client instance
-			client = new Paho.MQTT.Client("localhost", Number(9001), "webUI");
+			client = new Paho.MQTT.Client("192.168.1.163", Number(9001), "webUI");
 
 			// set callback handlers
 			client.onConnectionLost = onConnectionLost;
@@ -101,11 +101,22 @@
 		}
     </script>
 	<script>
+		function normalizeY(val) {
+			console.log(typeof val);
+			var normY = (660)*((val)/(4.8));
+			return normY
+		}
+		function normalizeX(val) {
+			var normX = (350)*((val+2.3)/(3.5));
+			return normX
+		}
 		function plotPoint(xVar,yVar){
 			const c = document.getElementById('myCanvas');
 			const ctx = c.getContext('2d');
-			const x = xVar;
-			const y = yVar;
+			const x = normalizeX(Number(xVar))
+			const y = normalizeY(Number(yVar))
+			console.log("x is " +  x + " y is " + y);
+			console.log(typeof xVar)
 			const radius = 5;
 			
 			ctx.globalCompositeOperation='source-over';
@@ -159,7 +170,7 @@
 	<script>
 		MQTTStart();
 	</script>
-    <canvas id="myCanvas" width="700" height="400"></canvas>
+    <canvas id="myCanvas" width="350" height="660"></canvas>
 	<script>
 		const canvas = document.getElementById('myCanvas');
 		const context = canvas.getContext('2d');
