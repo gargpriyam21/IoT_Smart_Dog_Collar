@@ -14,13 +14,16 @@ This repository is created for the sole purpose of uploading codes related to th
 - wiotp-sdk
 - requests
 - RPi.GPIO
+- MATLAB
 
 ```
 pip install requirements.txt
 ```
 
 ### Hardware
-
+x2 Raspberry Pi 3b
+x2 MPU6050 Accelerometer + gyro
+x3 Mobile phones with bluetooth
 
 ## Procedure
 
