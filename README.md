@@ -21,12 +21,24 @@ pip install requirements.txt
 ```
 
 ### Hardware
-x2 Raspberry Pi 3b
-x2 MPU6050 Accelerometer + gyro
-x3 Mobile phones with bluetooth
+- x2 Raspberry Pi 3b
+- x2 MPU6050 Accelerometer + gyro
+- x3 Mobile phones with bluetooth
 
 ## Procedure
 
+
+
+To Graph MPU Data:
+1. Attach smart harness to dog
+2. run "python3 RPi_dog/dataCollect.py"
+3. Follow along with prompts: Select task and name file
+4. Have dog complete task
+5. Program will end once dog remains still for 2-3 seconds
+6. Move new files onto a seperate device which has MATLAB installed
+7. run the MATLAB script "dogGraph.m"
+8. Follow prompts: give file name and title for graph
+9. Plot will be generated with accelerometer and gyro data
 
 # Instructor
 - Dr. Muhammad Shahzad (mshahza@ncsu.edu )
