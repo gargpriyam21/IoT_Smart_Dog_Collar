@@ -163,10 +163,63 @@
 			ctx.moveTo(0,(canvas.height/2)+(bufferHeight/2));
 			ctx.lineTo(100,(canvas.height/2)+(bufferHeight/2));
 			ctx.stroke();
+
+			plotBeacon(100,bufferHeight);
+			plotBeacon(100, c.height - 30);
+			plotBeacon(c.width - 30, (c.height/2)+(bufferHeight/2)-15);
+
+			plotTrashCan();
 		}
 
-		function plotBeacons(){
-			
+		function plotBeacon(x,y){
+			const c = document.getElementById('myCanvas');
+			const ctx = c.getContext('2d');
+			var outerWidth = 30;
+			var innerBoxOffset = 5;
+			var innerWidth = outerWidth - innerBoxOffset * 2;
+			var xInner = x + innerBoxOffset;
+			var yInner = y + innerBoxOffset;
+
+			ctx.globalCompositeOperation='destination-over';
+
+			ctx.beginPath();
+			ctx.rect(x, y, outerWidth, outerWidth);
+			ctx.rect(xInner, yInner, innerWidth, innerWidth);
+			ctx.moveTo(xInner+5, yInner+7);
+			ctx.lineTo(xInner+12, yInner+13);
+			ctx.lineTo(xInner+8, yInner+18);
+			ctx.lineTo(xInner+8,yInner+2);
+			ctx.lineTo(xInner+12,yInner+7);
+			ctx.lineTo(xInner+5,yInner+13);
+			ctx.stroke();
+		}
+
+		function plotTrashCan(){
+			const c = document.getElementById('myCanvas');
+			const ctx = c.getContext('2d');
+			var canPositionX = c.width - 50;
+			var canPositionY = c.height - 50;
+			var canRimX = canPositionX + 10;
+			var canRimY = canPositionY + 10;
+
+			//var img = new Image();
+			//img.onload = function(){
+			//	ctx.drawImage(img, canPositonX, canPositonY);
+			//}
+			//img.src = "/images/trashcan.jpeg";
+
+			ctx.beginPath();
+			//ctx.rect(0,0,10,10);
+			ctx.ellipse(canRimX,canRimY,25,10,0,0,2*Math.PI);
+			ctx.lineTo(canRimX+15,canRimY+30);
+			ctx.lineTo(canRimX-15,canRimY+30);
+			ctx.lineTo(canRimX-25,canRimY);
+			ctx.moveTo(canRimX-5,canRimY)
+			ctx.lineTo(canRimX-5,canRimY-5);
+			ctx.lineTo(canRimX+5,canRimY-5);
+			ctx.lineTo(canRimX+5,canRimY)
+			ctx.stroke();
+
 		}
 		
 		function clearCanvas(){
@@ -177,7 +230,7 @@
 			console.log("Clearing canvas...");
 			
 			context.beginPath();
-			context.rect(0, 0, canvas.width, canvas.height);
+			context.rect(0, 0, c.width, c.height);
 			context.stroke();
 		}
 	</script>
