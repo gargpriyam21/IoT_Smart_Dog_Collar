@@ -1,7 +1,9 @@
 BROKER = '192.168.1.163'
-PORT = 4000
+PORT = 1883
 
 TRASH_CAN_TOPIC = "ncsu/iot/TrashCanInDanger"
+
+topic_inform_trashcan = "ncsu/iot/InformTrashcanOwner"
 
 
 # Initializing the Trash Can's X and Y coordinates

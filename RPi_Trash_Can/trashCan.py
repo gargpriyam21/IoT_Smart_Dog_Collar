@@ -4,7 +4,6 @@ import numpy as np
 import time
 from constants import *
 import json
-from Triangulation.triangulation import *
 
 mpu = mpu6050(0x68)
 status = "Idle"
@@ -41,22 +40,32 @@ def get_mag(sensor, offset):
         mag = mag + ((vals[i]-offset[i])**2)
     return np.sqrt(mag)
 
-# def on_message(client, userdata, message):
-#     dog_nearby_status = json.loads(message.payload.decode("utf-8"))
-#
-#     if dogNearBy(dog_nearby_status) and status != "Bumped":
-#         client.publish(TRASH_CAN_TOPIC, "DogNearBy", qos=2)
-#         print("Dog is near the trash can")
-#     elif not dogNearBy(dog_nearby_status) and status != "Idle":
+dog_nearby = False
+def on_message(client, userdata, message):
+    global dog_nearby
+    dog_nearby_status = message.payload.decode("utf-8")
+    print(dog_nearby_status)
+
+    if dog_nearby_status == "DogNearby":
+        dog_nearby = True
+    else:
+        dog_nearby = False
+        
+def on_connect(client, userdata, flags, rc):
+    print("Connected to the Broker with result code "+str(rc))
 
 
 def main():
-    global status
+    global status, dog_nearby
 
-    trashCanClient = client.Client()
+    trashCanClient = client.Client("TrashCan")
+    trashCanClient.on_message = on_message
+    trashCanClient.on_connect = on_connect
     trashCanClient.connect(BROKER, port=PORT)
+    count_idle = 0
 
-    # trashCanClient.subscribe(topic_inform_trashcan, qos=2)
+    trashCanClient.loop_start()
+    trashCanClient.subscribe(topic_inform_trashcan, qos=2)
 
     mag = [0,0,0]
     status = "Idle"
@@ -68,18 +77,22 @@ def main():
         mag[1] = mag[0]
         mag[0] = get_mag(mpu,offset)
         avg_mag = np.mean(mag)
+        # print(avg_mag)
 
-        if (avg_mag > threshold) and (status == "Idle"):
+        if (avg_mag > threshold) and (status == "Idle") and dog_nearby:
             status = "Bumped"
             trashCanClient.publish(TRASH_CAN_TOPIC, "DogPlayingWithTrashCan", qos=2)
             print("Trashcan Bumped")
             time.sleep(3)
         
-        elif (avg_mag < threshold) and (status == "Bumped"):
-            status = "Idle"
-            trashCanClient.publish(TRASH_CAN_TOPIC, "TrashCanSafe", qos=2)
-            print("Trashcan not moving")
-            
+        elif (avg_mag < 1.5) and (status == "Bumped"):
+            count_idle += 1
+            time.sleep(0.25)
+            if count_idle == 3:
+                status = "Idle"
+                trashCanClient.publish(TRASH_CAN_TOPIC, "TrashCanSafe", qos=2)
+                print("Trashcan not moving")
+                count_idle = 0
         time.sleep(IMU_SAMPLING_RATE)
 
 if __name__ == '__main__':
