@@ -96,8 +96,6 @@ def beacon1_callback(bt_addr, rssi, packet, additional_info):
 
     BEACON1_Q.append(r1)
 
-    # calculate_dog_position()
-
 
 def beacon2_callback(bt_addr, rssi, packet, additional_info):
     global BEACON2_TXPOWER, PAST_BEACON2_RSSI
@@ -113,8 +111,6 @@ def beacon2_callback(bt_addr, rssi, packet, additional_info):
     r2 = get_radius(BEACON2_TXPOWER, deepcopy(PAST_BEACON2_RSSI))
 
     BEACON2_Q.append(r2)
-
-    # calculate_dog_position()
 
 
 def beacon3_callback(bt_addr, rssi, packet, additional_info):
@@ -132,10 +128,11 @@ def beacon3_callback(bt_addr, rssi, packet, additional_info):
 
     BEACON3_Q.append(r3)
 
-    # calculate_dog_position()
+dog_nearby_count = 0
+dog_went_away_count = 0
 
 def on_callback(bt_addr, rssi, packet, additional_info):
-    global dog_near_trashcan
+    global dog_near_trashcan, dog_nearby_count, dog_went_away_count
 
     if packet.namespace == BEACON1_NAMESPACE:
         # print("beacon 1 rssi = ", rssi)cl
@@ -148,11 +145,21 @@ def on_callback(bt_addr, rssi, packet, additional_info):
         beacon3_callback(bt_addr, rssi, packet, additional_info)
     elif packet.namespace == BEACON4_NAMESPACE:
         if rssi > DOG_TRASHCAN_NEARBY_THRESHOLD and not dog_near_trashcan:
-            dog_near_trashcan = True
-            dog_moving_status_subscriber.publish(topic_inform_trashcan, "DogNearby")
-        elif rssi < DOG_TRASHCAN_NEARBY_THRESHOLD and dog_near_trashcan:
-            dog_near_trashcan = False
-            dog_moving_status_subscriber.publish(topic_inform_trashcan, "DogWentAway")
+            dog_nearby_count += 1
+            if dog_nearby_count == 3:
+                dog_near_trashcan = True
+                dog_moving_status_subscriber.publish(topic_inform_trashcan, "DogNearby")
+                dog_nearby_count = 0
+                print("Dog near trashcan ----- ", rssi)
+            dog_went_away_count = 0
+        elif rssi < -80 and dog_near_trashcan:
+            dog_went_away_count += 1
+            if dog_went_away_count == 3:
+                dog_near_trashcan = False
+                dog_moving_status_subscriber.publish(topic_inform_trashcan, "DogWentAway")
+                print("Dog went away ------- ", rssi)
+                dog_went_away_count = 0
+            dog_nearby_count = 0
 
     calculate_dog_position()
 
@@ -171,7 +178,8 @@ def on_message(client, userdata, message):
 
 def main():
     beacon_scanner = BeaconScanner(callback=on_callback,
-                                    device_filter=[EddystoneFilter(namespace=BEACON1_NAMESPACE),EddystoneFilter(namespace=BEACON2_NAMESPACE),EddystoneFilter(namespace=BEACON3_NAMESPACE)]
+                                    device_filter=[EddystoneFilter(namespace=BEACON1_NAMESPACE),EddystoneFilter(namespace=BEACON2_NAMESPACE),
+                                    EddystoneFilter(namespace=BEACON3_NAMESPACE), EddystoneFilter(namespace=BEACON4_NAMESPACE)]
                                     )
 
     dog_moving_status_subscriber.on_connect = on_connect
