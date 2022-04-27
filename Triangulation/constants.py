@@ -37,4 +37,4 @@ BEACON3_TXPOWER = -65
 # Defining the timeout for each data reading
 TIMEOUT = 0.5
 
-DOG_TRASHCAN_NEARBY_THRESHOLD = -69
+DOG_TRASHCAN_NEARBY_THRESHOLD = -61
