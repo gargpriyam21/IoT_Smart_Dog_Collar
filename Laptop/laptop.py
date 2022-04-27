@@ -33,7 +33,7 @@ def on_message(client, userdata, message):
 
 def run():
     
-    subscriber = mqtt.Client("Laptop2")
+    subscriber = mqtt.Client("Laptop")
     
     subscriber.on_connect = on_connect
     subscriber.on_message = on_message

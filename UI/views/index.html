@@ -55,6 +55,7 @@
 			if (pathPoints.length+1 > numPointsPlotting) {
 				pathPoints.shift();
 				clearCanvas();
+				plotBackground();
 			}
 			pathPoints.push(payload);
 
@@ -67,13 +68,13 @@
 				console.log("Loop " + i);
 				console.log(pathPoints[i]);
 				var jsonPoint = JSON.parse(pathPoints[i]);
-				if (i == 0) {
-					plotPoint(jsonPoint.x,jsonPoint.y);
-				}
-				else {
-					var prevJsonPoint = JSON.parse(pathPoints[i-1])
-					plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
-				}
+				//if (i == 0) {
+				plotPoint(jsonPoint.x,jsonPoint.y);
+				//}
+				//else {
+				//	var prevJsonPoint = JSON.parse(pathPoints[i-1])
+				//	plotPathSegment(jsonPoint.x,jsonPoint.y,prevJsonPoint.x,prevJsonPoint.y)
+				//}
 			}
 			console.log("Plot point...");
 		}
@@ -146,6 +147,27 @@
 
 			plotPoint(xVar, yVar);
 		}
+
+		function plotBackground(){
+			const c = document.getElementById('myCanvas');
+			const ctx = c.getContext('2d');
+			var bufferHeight = 100;
+
+			ctx.globalCompositeOperation='destination-over';
+
+			ctx.beginPath();
+			ctx.moveTo(0,bufferHeight);
+			ctx.lineTo(canvas.width,bufferHeight);
+			ctx.moveTo(100,bufferHeight);
+			ctx.lineTo(100,canvas.height);
+			ctx.moveTo(0,(canvas.height/2)+(bufferHeight/2));
+			ctx.lineTo(100,(canvas.height/2)+(bufferHeight/2));
+			ctx.stroke();
+		}
+
+		function plotBeacons(){
+			
+		}
 		
 		function clearCanvas(){
 			const c = document.getElementById('myCanvas');
@@ -178,6 +200,8 @@
 		context.beginPath();
 		context.rect(0, 0, canvas.width, canvas.height);
 		context.stroke();
+
+		plotBackground();
 	</script>
 	<h2>
 	Status:
