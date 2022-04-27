@@ -53,6 +53,8 @@ def on_message(client, userdata, message):
         
 def on_connect(client, userdata, flags, rc):
     print("Connected to the Broker with result code "+str(rc))
+    client.publish(TRASH_CAN_TOPIC, "TrashCanSafe", qos=2)
+    print("Trashcan not moving")
 
 
 def main():
@@ -61,7 +63,7 @@ def main():
     trashCanClient = client.Client("TrashCan")
     trashCanClient.on_message = on_message
     trashCanClient.on_connect = on_connect
-    trashCanClient.connect(BROKER, port=PORT)
+    trashCanClient.connect(BROKER, port=PORT, keepalive = 2000)
     count_idle = 0
 
     trashCanClient.loop_start()
@@ -69,7 +71,7 @@ def main():
 
     mag = [0,0,0]
     status = "Idle"
-    trashCanClient.publish(TRASH_CAN_TOPIC, "TrashCanSafe", qos=2)
+    # trashCanClient.publish(TRASH_CAN_TOPIC, "TrashCanSafe", qos=2)
     offset = calibrate(mpu)
 
     while True:
