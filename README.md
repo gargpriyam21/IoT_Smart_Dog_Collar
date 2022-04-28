@@ -1,4 +1,4 @@
-# IoT_Final_Group11
+# IoT Final Project Group11
 
 This repository is created for the sole purpose of uploading codes related to the Final Project for the course CSC 591 - 022 Internet of Things: Architectures, Applications, and Implementation Spring 2022 of North Carolina State University.
 
