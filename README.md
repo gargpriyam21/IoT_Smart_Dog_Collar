@@ -25,6 +25,13 @@ pip install requirements.txt
 - x2 MPU6050 Accelerometer + gyro
 - x3 Mobile phones with bluetooth
 
+To setup the hardware, connect the following raspberry pi GPIO pins to the corresponding MPU pins.
+
+GPIO 2 to SDA, <br />
+GPIO 3 to SCL, <br />
+5V to VCC, <br />
+GND to GND <br />
+
 ## Procedure
 To Track Dog's Status
 1. Attach smart harness to dog
