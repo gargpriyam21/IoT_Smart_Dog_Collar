@@ -7,14 +7,28 @@ This repository is created for the sole purpose of uploading codes related to th
 
 ## Requirements
 ### Software
+## Requirements
+### Software
 - Python3 3.7.3
-- paho-mqtt v1.6.1
-- numpy v1.19.5
+- paho-mqtt==1.6.1
+- numpy==1.19.5
 - mosquitto 
 - wiotp-sdk
-- requests
-- RPi.GPIO
+- requests==2.25.1
+- RPi.GPIO==0.7.0
 - MATLAB
+- beacontools==2.1.0
+- gattlib==0.20201113
+- mpu6050-raspberrypi==1.2
+- Pillow==8.1.2
+- PyBluez==0.23
+- requests-oauthlib==1.0.0
+- responses==0.12.1
+- sympy==1.10.1
+- urllib3==1.26.5
+
+
+Follow this [link](https://learn.adafruit.com/install-bluez-on-the-raspberry-pi/installation) and follow the steps to install Bluez
 
 ```
 pip install requirements.txt
