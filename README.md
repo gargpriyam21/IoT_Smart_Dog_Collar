@@ -16,6 +16,9 @@ This repository is created for the sole purpose of uploading codes related to th
 - RPi.GPIO
 - MATLAB
 
+
+Follow this [link](https://learn.adafruit.com/install-bluez-on-the-raspberry-pi/installation) and follow the steps to install Bluez
+
 ```
 pip install requirements.txt
 ```
