@@ -35,7 +35,7 @@ pip install requirements.txt
 ### Hardware
 - x2 Raspberry Pi 3b
 - x2 MPU6050 Accelerometer + gyro
-- x3 Mobile phones with bluetooth
+- x4 Mobile phones with bluetooth
 
 To setup the hardware for both Pis, connect the following raspberry pi GPIO pins to the corresponding MPU pins.
 
