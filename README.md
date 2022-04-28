@@ -51,7 +51,7 @@ To Track Dog's Status
 2. Setup up other raspberry pi on trashcan
 3. ssh into both raspberry pis from a laptop
 4. setup the three bluetooth beacons at locations inducated on UI
-5. On the laptop, run the mqtt broker and the UI client
+5. On the laptop, run the mqtt broker, the UI client and the code Laptop/laptop.py
 6. On the trashcan Pi, run trashCan.py in the RPi_Trash_Can folder
 7. on the smart harness, run dogPub.py in the RPi_dog folder
 8. next on the smart harness, run ble_detection.py in the Triangulation folder
