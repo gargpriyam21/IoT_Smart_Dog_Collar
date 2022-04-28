@@ -26,8 +26,17 @@ pip install requirements.txt
 - x3 Mobile phones with bluetooth
 
 ## Procedure
+To Track Dog's Status
+1. Attach smart harness to dog
+2. Setup up other raspberry pi on trashcan
+3. ssh into both raspberry pis from a laptop
+4. setup the three bluetooth beacons at locations inducated on UI
+5. On the laptop, run the mqtt broker and the UI client
+6. On the trashcan Pi, run trashCan.py in the RPi_Trash_Can folder
+7. on the smart harness, run dogPub.py in the RPi_dog folder
+8. next on the smart harness, run ble_detection.py in the Triangulation folder
 
-
+Once everything is connected and running, the UI should display the status of the dog and trashcan, and should start plotting the coordinates it is calculating from the RSSI values.
 
 To Graph MPU Data:
 1. Attach smart harness to dog
