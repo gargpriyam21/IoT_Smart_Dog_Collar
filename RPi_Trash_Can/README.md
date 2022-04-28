@@ -31,6 +31,7 @@ Follow this [link](https://learn.adafruit.com/install-bluez-on-the-raspberry-pi/
 ```
 pip install requirements.txt
 ```
+
 ### Hardware
 - x1 Raspberry Pi 3b
 - x1 MPU6050 Accelerometer + gyro
