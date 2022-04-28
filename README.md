@@ -59,7 +59,7 @@ Once everything is connected and running, the UI should display the status of th
 
 To Graph MPU Data:
 1. Attach smart harness to dog
-2. run "python3 RPi_dog/dataCollect.py"
+2. run "python3 RPi_dog/dog_movement_collection/dataCollect.py"
 3. Follow along with prompts: Select task and name file
 4. Have dog complete task
 5. Program will end once dog remains still for 2-3 seconds
