@@ -1,6 +1,4 @@
-# IoT_Final_Group11
-
-This repository is created for the sole purpose of uploading codes related to the Final Project for the course CSC 591 - 022 Internet of Things: Architectures, Applications, and Implementation Spring 2022 of North Carolina State University.
+# IoT_Smart_Dog_Collar
 
 ## Description
 This folder contains the necessary files for running the webpage UI to view the Smart Dog Collar status
@@ -30,20 +28,6 @@ Server can be hosted on a raspberry pi or linux laptop using the provided method
 node server.js
 ```
 This will start the nodejs webserver on your localhost using port 8080
-
-# Instructor
-- Dr. Muhammad Shahzad (mshahza@ncsu.edu )
-
-# Teaching Assistants
-- Hassan Ali Khan (hakhan@ncsu.edu)
-
-# Team
-- Priyam Garg (pgarg6@ncsu.edu)
-- Divyang Doshi	(ddoshi2@ncsu.edu)
-- Brendan Driscoll (bhdrisco@ncsu.edu)
-- Jordan Boerger (jwboerge@ncsu.edu)
-- Vishal Veera Reddy (vveerar2@ncsu.edu)
-
 
 Environment:
 - Raspberry pi
